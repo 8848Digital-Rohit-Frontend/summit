@@ -5,6 +5,9 @@ import { toast } from 'react-toastify';
 import UploadReviewPhotoAPI from '../../services/api/utils/upload-file-api';
 import { useSelector } from 'react-redux';
 import { get_access_token } from '../../store/slices/auth/token-login-slice';
+import useOrderListHook from './useOrderListHook';
+import useHandleStateUpdate from '../GeneralHooks/handle-state-update-hook';
+import useFetchOrderListHook from './useFetchOrderListHook';
 
 function useReplaceOrder() {
   const defaultValues = {
@@ -16,6 +19,9 @@ function useReplaceOrder() {
   const [formValues, setFormValues] = useState<any>(defaultValues);
   const [emptyFields, setEmptyFields] = useState<any>({});
   const TokenFromStore: any = useSelector(get_access_token);
+
+  const { setIsLoading, setErrMessage }: any = useHandleStateUpdate();
+  const { fetchOrderListingDataFun }: any = useFetchOrderListHook;
 
   const imageLoader = ({ src, width, quality }: any) => {
     return `${CONSTANTS.API_BASE_URL}${src}?w=${width}&q=${quality || 75}`;
@@ -55,7 +61,7 @@ function useReplaceOrder() {
     });
   };
 
-  const handleSubmit = async (orderId: any, productId: any) => {
+  const handleSubmit = async (orderId: any, productId: any, handleClose: any) => {
     let error: any = {};
     if (formValues?.reason === '') {
       error = { ...error, reason: '' };
@@ -81,8 +87,13 @@ function useReplaceOrder() {
 
       if (replaceOrder.data.message.msg === 'success') {
         toast.success('Replacement Order Created Successfully!');
+        handleClose();
+        setFormValues({ ...defaultValues });
+        setEmptyFields({});
+        fetchOrderListingDataFun(setErrMessage, setIsLoading);
       } else {
         toast.error('Replacement Unsuccessfull');
+        handleClose();
       }
     }
   };
