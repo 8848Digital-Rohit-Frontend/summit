@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import UploadReviewPhotoAPI from '../../services/api/utils/upload-file-api';
 import { useSelector } from 'react-redux';
 import { get_access_token } from '../../store/slices/auth/token-login-slice';
-import useOrderListHook from './useOrderListHook';
 import useHandleStateUpdate from '../GeneralHooks/handle-state-update-hook';
 import useFetchOrderListHook from './useFetchOrderListHook';
 
@@ -21,7 +20,7 @@ function useReplaceOrder() {
   const TokenFromStore: any = useSelector(get_access_token);
 
   const { setIsLoading, setErrMessage }: any = useHandleStateUpdate();
-  const { fetchOrderListingDataFun }: any = useFetchOrderListHook;
+  const { fetchOrderListingDataFun }: any = useFetchOrderListHook();
 
   const imageLoader = ({ src, width, quality }: any) => {
     return `${CONSTANTS.API_BASE_URL}${src}?w=${width}&q=${quality || 75}`;
@@ -71,7 +70,7 @@ function useReplaceOrder() {
     }
     setEmptyFields({ ...error });
 
-    if (!(error.qty || error.reason)) {
+    if (!(error.qty === '' || error.reason === '')) {
       const { SUMMIT_APP_CONFIG }: any = CONSTANTS;
 
       const data = {
