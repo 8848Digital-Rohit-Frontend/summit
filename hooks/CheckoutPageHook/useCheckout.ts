@@ -85,7 +85,7 @@ const useCheckout = () => {
         if (orderPlace?.status === 200) {
           // setOrderSummary(orderSummaryData?.data?.message?.data);
           // toast.success('Order place sucessfully!');
-          router.push('/my-orders');
+          router.push({ pathname: '/my-orders', query: { status: 'completed-orders', date_range: 'this_month' } });
           fetchCartListingData();
           dispatch(clearCart());
         } else {
