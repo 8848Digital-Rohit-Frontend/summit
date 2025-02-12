@@ -1,7 +1,7 @@
-import axios, { AxiosRequestHeaders } from 'axios';
+import axios from 'axios';
 import { CONSTANTS } from '../../config/app-config';
-import { client } from '../general_apis/cookie-instance-api';
 import UserRoleGet from './get_userrole_api';
+import APP_CONFIG from '../../../interfaces/app-config-interface';
 interface IRaw_Data {
   version?: string;
   method?: string;
@@ -15,16 +15,15 @@ interface IRaw_Data {
   with_otp?: boolean;
 }
 
-const GoogleLoginFetch = async (request: any) => {
-  console.log('google@', request?.values);
-  console.log('google@', request?.values?.email);
+const GoogleLoginFetch = async (appConfig: APP_CONFIG, request: any) => {
   let response: any;
   let raw_data: IRaw_Data;
-  const version = CONSTANTS.VERSION;
+  const version = appConfig.version;
   const method = 'signin';
   const entity = 'signin';
+  const apiSDKName = appConfig.app_name;
+
   const params = `?version=${version}&method=${method}&entity=${entity}&usr=${request.values.email}&via_google=${request.isGoogleLogin}`;
-  console.log('otp req', request);
 
   const config = {
     headers: {
@@ -38,33 +37,28 @@ const GoogleLoginFetch = async (request: any) => {
   };
 
   await axios
-    .post(`${CONSTANTS.API_BASE_URL}/${CONSTANTS.API_MANDATE_PARAMS}${params}`, undefined, { ...config, timeout: 5000 })
+    .post(`${CONSTANTS.API_BASE_URL}${apiSDKName}${params}`, undefined, { ...config, timeout: 5000 })
     .then((res) => {
-      console.log('google login response api', res);
       response = res?.data?.message;
       if (res?.data?.message?.msg === 'success') {
         localStorage.setItem('isLoggedIn', 'true');
       }
-      UserRoleGet(res?.data?.message?.data?.access_token);
+      UserRoleGet(appConfig, res?.data?.message?.data?.access_token);
     })
     .catch((err) => {
       if (err.code === 'ECONNABORTED') {
-        console.log('req time out');
         response = 'Request timed out';
       } else if (err.code === 'ERR_BAD_REQUEST') {
-        console.log('bad request');
         response = 'Bad Request';
       } else if (err.code === 'ERR_INVALID_URL') {
-        console.log('invalid url');
         response = 'Invalid URL';
       } else {
-        console.log('navbar api res err', err);
         response = err;
       }
     });
   return response;
 };
 
-const getGoogleLoginApi = (request: any) => GoogleLoginFetch(request);
+const getGoogleLoginApi = (appConfig: APP_CONFIG, request: any) => GoogleLoginFetch(appConfig, request);
 
 export default getGoogleLoginApi;

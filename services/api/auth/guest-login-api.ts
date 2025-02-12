@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { CONSTANTS } from '../../config/app-config';
+import APP_CONFIG from '../../../interfaces/app-config-interface';
 
 interface IRaw_Data {
   version?: string;
@@ -12,10 +13,11 @@ interface IRaw_Data {
   redirect?: boolean;
   guest_token?: any;
 }
-const CheckGuestLogin = async (request: any) => {
+const CheckGuestLogin = async (appConfig: APP_CONFIG, request: any) => {
   let response: any;
   let raw_data: IRaw_Data;
-  const version = CONSTANTS.VERSION;
+  const version = appConfig.version;
+  const apiSDKName = appConfig.app_name;
 
   let isVisitor = typeof window !== 'undefined' ? localStorage.getItem('guest') : null;
 
@@ -32,7 +34,7 @@ const CheckGuestLogin = async (request: any) => {
   };
 
   await axios
-    .post(`${CONSTANTS.API_BASE_URL}${CONSTANTS.API_MANDATE_PARAMS}`, raw_data, { ...config, timeout: 5000 })
+    .post(`${CONSTANTS.API_BASE_URL}${apiSDKName}`, raw_data, { ...config, timeout: 5000 })
     .then((res) => {
       response = res?.data?.data?.access_token;
       if (response?.data?.data?.message === 'Logged In') {

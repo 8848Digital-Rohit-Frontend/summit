@@ -19,12 +19,16 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 # local env files
-.env*.local
+.env*
 # vercel
 .vercel
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# summit settings json
+*.json
+
 /public/robots.txt
 /public/sitemap.xml
 /themes/elite
@@ -33,6 +37,7 @@ next-env.d.ts
 /themes/theme-long
 /themes/vortexit/
 /themes/fancy-gold
+/themes/demo-theme
 /cards 
 /components
 /styles
@@ -42,6 +47,7 @@ next-env.d.ts
 /pages/index.tsx
 /pages/dealer-ledger.tsx
 /pages/quick-order.tsx
+/pages/bulk-order.tsx
 /pages/sales-register.tsx
 /pages/firmware.tsx
 /pages/contact-us.tsx

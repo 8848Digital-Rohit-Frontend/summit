@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchMultiLanguagesThunkAPI, multiLanguageDataFromStore } from '../../store/slices/general_slices/multilang-slice';
-import { SelectedFilterLangDataFromStore, SelectedLangData } from '../../store/slices/general_slices/selected-multilanguage-slice';
-import { get_access_token } from '../../store/slices/auth/token-login-slice';
+import { multiLanguageDataFromStore } from '../../store/slices/general_slices/multilang-slice';
+import { SelectedLangData } from '../../store/slices/general_slices/selected-multilanguage-slice';
 
 const useMultilangHook = () => {
   const dispatch = useDispatch();
   const MultiLanguageFromStore = useSelector(multiLanguageDataFromStore);
-
-  const SelectedLangDataFromStore = useSelector(SelectedFilterLangDataFromStore);
-
-  // console.log("MultiLanguageFromStore hoooook", MultiLanguageFromStore);
   const [multiLanguagesData, SetMultiLanguagesData] = useState<any>([]);
   const [selectedLang, setSelectedLang] = useState<any>('en');
-  const TokenFromStore: any = useSelector(get_access_token);
+
+  const handleLanguageChange = (lang: any) => {
+    if (lang === 'ar') {
+      document.documentElement.dir = 'rtl';
+    } else {
+      document.documentElement.dir = 'ltr';
+    }
+    setSelectedLang(lang);
+
+    localStorage.setItem('selectedLanguage', lang);
+  };
 
   useEffect(() => {
     // Retrieve the selected language from localStorage on component mount
@@ -26,44 +31,19 @@ const useMultilangHook = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   dispatch(fetchMultiLanguagesThunkAPI(TokenFromStore?.token) as any);
-  // }, []);
-
   useEffect(() => {
-    // console.log("check data of server obj - hook", MultiLanguageFromStore);
     if (Object.keys(MultiLanguageFromStore)?.length > 0) {
       SetMultiLanguagesData(MultiLanguageFromStore?.languageData);
     }
   }, [MultiLanguageFromStore]);
-
-  const handleLanguageChange = (lang: any) => {
-    console.log('selected lang', lang);
-    if (lang === 'ar') {
-      document.documentElement.dir = 'rtl';
-    } else {
-      document.documentElement.dir = 'ltr';
-    }
-    setSelectedLang(lang);
-
-    localStorage.setItem('selectedLanguage', lang);
-  };
 
   useEffect(() => {
     const params = {
       multilanguageData: MultiLanguageFromStore?.languageData,
       selectedLanguage: selectedLang,
     };
-    // console.log("params", params);
     dispatch(SelectedLangData(params) as any);
   }, [MultiLanguageFromStore, selectedLang]);
-
-  // console.log(
-  //   "MultiLanguageFromStore hoooook",
-  //   multiLanguagesData,
-  //   selectedLang
-  // );
-
   return {
     setSelectedLang,
     selectedLang,

@@ -1,59 +1,24 @@
 import { Html, Head, Main, NextScript } from 'next/document';
-export const config = { amp: 'hybrid' };
+import { CONSTANTS } from '../services/config/app-config';
+import Script from 'next/script';
+
 export default function Document() {
-  let isDealer;
-  if (typeof window !== 'undefined') {
-    isDealer = localStorage.getItem('isDealer');
-  }
   return (
-    <Html>
+    <Html lang="en">
       <Head>
-        <>
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,700,0,0&display=swap"
-            onLoad={(e) => {
-              console.log('Font Loaded Successfully');
-              const linkElem = e.currentTarget as HTMLLinkElement;
-              linkElem.media = 'all';
-            }}
-          />
-          {/* <!-- Font Awesome Icons --> */}
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-            onLoad={(e) => {
-              console.log('Font Loaded Successfully');
-              const linkElem = e.currentTarget as HTMLLinkElement;
-              linkElem.media = 'all';
-            }}
-          />
-          {/* <!-- Google fonts --> */}
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin={'anonymous'} />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Inter:wght@400;500;600;700&family=Rubik:wght@300&display=swap"
-            rel="stylesheet"
-            onLoad={(e) => {
-              console.log('Font Loaded Successfully');
-              const linkElem = e.currentTarget as HTMLLinkElement;
-              linkElem.media = 'all';
-            }}
-          />
-          {/* <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com"> */}
-          <link
-            href="https://fonts.googleapis.com/css2?family=Nunito&display=swap"
-            rel="stylesheet"
-            onLoad={(e) => {
-              console.log('Font Loaded Successfully');
-              const linkElem = e.currentTarget as HTMLLinkElement;
-              linkElem.media = 'all';
-            }}
-          />
-        </>
+        <link rel="preconnect" href={`${CONSTANTS.API_BASE_URL}`} />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        {/* <!-- Google tag (gtag.js) --> */}
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-X9PK6K9PE5"></Script>
+        <Script id="google-analytics">
+          {`window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments)}
+          gtag('js', new Date());
+          gtag('config', 'G-X9PK6K9PE5')`}
+        </Script>
       </Head>
       <body>
         <Main />

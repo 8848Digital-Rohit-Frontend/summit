@@ -1,44 +1,42 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { get_access_token } from '../store/slices/auth/token-login-slice';
 import { CONSTANTS } from '../services/config/app-config';
-import MetaTag from '../services/api/general_apis/meta-tag-api';
+import checkAuthorizedUser from '../utils/auth';
+import { ServerDataTypes } from '../interfaces/meta-data-interface';
+import getPageMetaData from '../utils/fetch-page-meta-deta';
+import PageMetaData from '../components/PageMetaData';
 import LoginComponent from '../components/Auth/LoginComponent';
 
-const login = () => {
-  const TokenFromStore: any = useSelector(get_access_token);
+const login = ({ serverDataForPages }: ServerDataTypes) => {
   const router = useRouter();
   function checkIfUserIsAuthorized() {
-    if (TokenFromStore?.token !== '') {
+    const checkUserStatus = checkAuthorizedUser();
+    if (checkUserStatus) {
       router.push('/');
     } else {
-      return (
-        <>
-          <LoginComponent />
-        </>
-      );
+      return <LoginComponent />;
     }
   }
-  return <>{CONSTANTS?.ALLOW_GUEST_TO_ACCESS_SITE_EVEN_WITHOUT_AUTHENTICATION ? <LoginComponent /> : checkIfUserIsAuthorized()}</>;
+  return (
+    <>
+      {CONSTANTS.ENABLE_META_TAGS && <PageMetaData meta_data={serverDataForPages.metaData} />}
+      {CONSTANTS?.ALLOW_GUEST_TO_ACCESS_SITE_EVEN_WITHOUT_AUTHENTICATION ? <LoginComponent /> : checkIfUserIsAuthorized()}
+    </>
+  );
 };
 
 export async function getServerSideProps(context: any) {
+  const { SUMMIT_APP_CONFIG } = CONSTANTS;
   const method = 'get_meta_tags';
-  const version = 'v1';
+  const version = SUMMIT_APP_CONFIG.version;
   const entity = 'seo';
   const params = `?version=${version}&method=${method}&entity=${entity}`;
   const url = `${context.resolvedUrl.split('?')[0]}`;
   if (CONSTANTS.ENABLE_META_TAGS) {
-    let meta_data: any = await MetaTag(`${CONSTANTS.API_BASE_URL}${CONSTANTS.API_MANDATE_PARAMS}${params}&page_name=${url}`);
-    if (meta_data !== null && Object.keys(meta_data).length > 0) {
-      const metaData = meta_data?.data?.message?.data;
-      return { props: { metaData } };
-    } else {
-      return { props: {} };
-    }
+    return await getPageMetaData(params, url);
   } else {
-    return { props: {} };
+    return {
+      props: {},
+    };
   }
 }
 export default login;

@@ -1,36 +1,31 @@
-import React from 'react';
-import Registration from '../components/Auth/Registration';
 import { CONSTANTS } from '../services/config/app-config';
-import MetaTag from '../services/api/general_apis/meta-tag-api';
+import { ServerDataTypes } from '../interfaces/meta-data-interface';
+import getPageMetaData from '../utils/fetch-page-meta-deta';
+import PageMetaData from '../components/PageMetaData';
+import RegisterComponent from '../components/Auth/RegisterComponent';
 
-const registration = () => {
+const Register = ({ serverDataForPages }: ServerDataTypes) => {
   return (
     <>
-      <Registration />
+      {CONSTANTS.ENABLE_META_TAGS && <PageMetaData meta_data={serverDataForPages.metaData} />}
+      <RegisterComponent />
     </>
   );
 };
 
 export async function getServerSideProps(context: any) {
+  const { SUMMIT_APP_CONFIG } = CONSTANTS;
   const method = 'get_meta_tags';
-  const version = 'v1';
+  const version = SUMMIT_APP_CONFIG.version;
   const entity = 'seo';
   const params = `?version=${version}&method=${method}&entity=${entity}`;
   const url = `${context.resolvedUrl.split('?')[0]}`;
-  console.log('context url', context.resolvedUrl);
   if (CONSTANTS.ENABLE_META_TAGS) {
-    let meta_data: any = await MetaTag(`${CONSTANTS.API_BASE_URL}${CONSTANTS.API_MANDATE_PARAMS}${params}&page_name=${url}`);
-
-    if (meta_data !== null && Object.keys(meta_data).length > 0) {
-      const metaData = meta_data?.data?.message?.data;
-      // console.log("meta data in page server", metaData);
-      return { props: { metaData } };
-    } else {
-      return { props: {} };
-    }
+    return await getPageMetaData(params, url);
   } else {
-    return { props: {} };
+    return {
+      props: {},
+    };
   }
 }
-
-export default registration;
+export default Register;

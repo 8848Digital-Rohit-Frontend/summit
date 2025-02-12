@@ -1,11 +1,13 @@
 import axios from 'axios';
 import { CONSTANTS } from '../../config/app-config';
+import APP_CONFIG from '../../../interfaces/app-config-interface';
 
-const UserRoleFetch = async (token: any) => {
+const UserRoleFetch = async (appConfig: APP_CONFIG, token: any) => {
   let response: any;
-  const version = CONSTANTS.VERSION;
+  const version = appConfig.version;
   const method = 'get_user_profile';
   const entity = 'signin';
+  const apiSDKName = appConfig.app_name;
 
   const config = {
     headers: {
@@ -15,7 +17,7 @@ const UserRoleFetch = async (token: any) => {
 
   await axios
     .get(
-      `${CONSTANTS.API_BASE_URL}${CONSTANTS.API_MANDATE_PARAMS}?version=${version}&method=${method}&entity=${entity}`,
+      `${CONSTANTS.API_BASE_URL}${apiSDKName}?version=${version}&method=${method}&entity=${entity}`,
       { ...config, timeout: 5000 }
       // config
     )
@@ -29,16 +31,12 @@ const UserRoleFetch = async (token: any) => {
     })
     .catch((err: any) => {
       if (err.code === 'ECONNABORTED') {
-        console.log('req time out');
         response = 'Request timed out';
       } else if (err.code === 'ERR_BAD_REQUEST') {
-        console.log('bad request');
         response = 'Bad Request';
       } else if (err.code === 'ERR_INVALID_URL') {
-        console.log('invalid url');
         response = 'Invalid URL';
       } else {
-        console.log('navbar api res err', err);
         response = err;
       }
     });
@@ -46,6 +44,6 @@ const UserRoleFetch = async (token: any) => {
   return response;
 };
 
-const UserRoleGet = (token: any) => UserRoleFetch(token);
+const UserRoleGet = (appConfig: APP_CONFIG, token: any) => UserRoleFetch(appConfig, token);
 
 export default UserRoleGet;

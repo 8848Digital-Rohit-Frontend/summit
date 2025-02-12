@@ -1,14 +1,16 @@
 import axios from 'axios';
 import { CONSTANTS } from '../../config/app-config';
 import UserRoleGet from './get_userrole_api';
+import APP_CONFIG from '../../../interfaces/app-config-interface';
 
-const OtpLoginApi = async (request: any) => {
-  console.log('otp login req', request);
+const OtpLoginApi = async (appConfig: APP_CONFIG, request: any) => {
   let response: any;
-  const version = CONSTANTS.VERSION;
+  const version = appConfig.version;
   const method = 'signin';
   const entity = 'signin';
   const otpLogin = 'true';
+  const apiSDKName = appConfig.app_name;
+
   const params = `?version=${version}&method=${method}&entity=${entity}&usr=${request.values.email}&pwd=${request.values.password}&with_otp=${otpLogin}`;
   const config = {
     headers: {
@@ -17,13 +19,13 @@ const OtpLoginApi = async (request: any) => {
   };
 
   await axios
-    .post(`${CONSTANTS.API_BASE_URL}/${CONSTANTS.API_MANDATE_PARAMS}${params}`, undefined, { ...config, timeout: 5000 })
+    .post(`${CONSTANTS.API_BASE_URL}${apiSDKName}${params}`, undefined, { ...config, timeout: 5000 })
     .then((res: any) => {
       response = res?.data?.message;
       if (res?.data?.message?.msg === 'success') {
         localStorage.setItem('isLoggedIn', 'true');
       }
-      UserRoleGet(res?.data?.message?.data?.access_token);
+      UserRoleGet(appConfig, res?.data?.message?.data?.access_token);
     })
     .catch((err) => {
       if (err.code === 'ECONNABORTED') {

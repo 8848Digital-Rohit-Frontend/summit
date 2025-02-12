@@ -1,60 +1,53 @@
-# SUMMIT
+<div align="center">
+  <a href="https://summit-docs.8848digital.com/app-documentation/introduction">
+    <picture>
+      <img alt="Next.js logo" src="https://s3.us-east-2.amazonaws.com/summit-8848-s3/20240919/2024/10/11/File/8EXUZOW6_Summit_Banner.jpg">
+    </picture>
+  </a>
 
-Welcome to the Summit open-source repository! This repository contains the source code and assets for our awesome project. To get started, you'll need to fork and clone this repository to your local system. This README will guide you through the process.
+  <div style="margin-top:12px">
 
-## Forking the Repository
+![nextjs version](https://img.shields.io/badge/NextJS-v13.4.1-%2346bc8f)
+![react version](https://img.shields.io/badge/React-v18.2.0-%2346bc8f)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 
-**Fork the Repository**: In the top right corner of the repository page, click the "Fork" button. This will create a copy of the repository in your GitHub account.
+</div>
+</div>
 
-GitHub will take a moment to create the fork. Once it's done, you'll be redirected to your forked repository.
+## What is Summit?
 
-## Cloning the Repository to Your Local System
+Summit is an Ecommerce Platform built with Next.js backed by powerful ERP software [`ERPNext`](https://erpnext.com/), designed to serve as a comprehensive commerce platform. It encompasses all the essential functionalities of an e-commerce application. With Summit, you have everything you need to create a fully operational online shopping experience.
 
-Now that you have forked the repository, you'll need to clone it to your local machine so you can work on it.
+## Architecture
 
-## Cloning and Installing Theme Repository
+Summit is organized into two main components, each serving a specific purpose:
 
-Before you begin working on this project, ensure you clone and install the theme repository. This repository contains the core functionalities of the E-commerce Application, while cloning the theme repository focuses on the UI/UX aspect of the application.
+1. **Summit**
+   <br/>
+   This part includes the core functionalities of the platform, encompassing all API files, hooks, and essential pages. It forms the backbone of the application, providing the necessary infrastructure for e-commerce operations.
 
-Follow these steps to clone theme repository:
+2. **Themes**
+   <br/>
+   Themes component contains all the UI/UX elements needed for an engaging user experience. It includes various components that allow users to customize the look and feel of their online store, ensuring a seamless and visually appealing shopping experience.
 
-1. Open your web browser and go to [https://github.com/orgs/summit-webapp-themes/repositories](https://github.com/orgs/summit-webapp-themes/repositories).
-2. Browse through the list of repositories and select the theme repository that corresponds to your project's requirements.
-3. Click on the selected theme repository to access its page.
-4. Create a fork of theme repository (In case you want to report an issue or request a change).
-5. Copy the URL provided under the "Code" tab. It should look something like: `https://github.com/summit-webapp-themes/theme-repo.git`.
-6. Now, return to your local machine where you've forked the Summit open-source repository.
-7. Open a terminal or command prompt.
-8. Navigate to the themes directory inside the summit folder. Use the `cd` command to change directories. For example: `cd themes`.
-9. Once you're inside the project directory, run the following command to clone the theme repository:
+## Installation
 
-```shell
-git clone https://github.com/summit-webapp-themes/theme-repo.git
-```
+You can find the installation process detailed in our documentation: [`Installation Guide`](https://summit-docs.8848digital.com/installation).
 
-10. Navigate to the theme repo.
+## Documentation
 
-```shell
- cd theme-repo
-```
+You can find the Summit documentation [on the website](https://summit-docs.8848digital.com/app-documentation/introduction).
 
-11. Take checkout of main branch
-    ```shell
-    git checkout main
-    ```
-12. After checking out from main branch, you need to install the theme by running the following command.
-    ```shell
-    /bin/bash install-theme.sh
-    ```
-13. After following the above steps, navigate back to summit repository
-    ```shell
-    cd ../../
-    ```
-14. Install all the dependencies first. Enter this command to install the dependencies
-    ```shell
-    npm install
-    ```
-15. Now you're good to run the application. Run the following command
-    ```shell
-    npm run dev
-    ```
+You can help us improve it by raising issues to us.
+
+## Contributing
+
+Summit is one-of-a-kind open source Ecommerce App. The main purpose of this repository is to continue evolving and making Ecommerce simpler for businesses, making it faster and easier to use.
+
+## Reporting Bugs
+
+If you find any bugs, feel free to report them here on [GitHub Issues](https://github.com/summit-webapp/summit/issues). Make sure you share enough information (app screenshots, browser console screenshots, stack traces, etc) for project maintainers to replicate your bug.
+
+## License
+
+[MIT](LICENSE.md)
