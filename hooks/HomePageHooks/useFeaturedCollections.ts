@@ -6,7 +6,7 @@ import { currency_selector_state, setCurrencyValue } from '../../store/slices/ge
 import getDisplaytagsDataFromAPI from '../../services/api/home-page-apis/home-display-tag-api';
 import useHandleStateUpdate from '../GeneralHooks/handle-state-update-hook';
 
-const useFeaturedCollections = () => {
+const useFeaturedCollections = (componentProperties: any) => {
   const dispatch = useDispatch();
   const currency_state_from_redux: any = useSelector(currency_selector_state);
   const { isLoading, setIsLoading, errorMessage, setErrMessage }: any = useHandleStateUpdate();
@@ -19,20 +19,27 @@ const useFeaturedCollections = () => {
     const params: any = ['name', 'description', 'tag_image'];
     setIsLoading(true);
     try {
-      const getDisplayTagsData = await getDisplaytagsDataFromAPI(SUMMIT_APP_CONFIG, params, currency_value, tokenFromStore?.token);
+      const getDisplayTagsData = await getDisplaytagsDataFromAPI(
+        SUMMIT_APP_CONFIG,
+        params,
+        componentProperties?.collection_name,
+        currency_value,
+        tokenFromStore?.token
+      );
+      console.log('getDisplayTagsData', getDisplayTagsData);
 
       if (getDisplayTagsData?.length > 0) {
         const tagsDataArray = getDisplayTagsData
           .map((data: any) => {
-            if (data?.value?.message?.msg === 'success') {
+            if (data?.value?.msg === 'success') {
               return {
                 tag_name: data.tag_name,
                 description: data.description,
-                value: data?.value?.message?.data,
+                value: data?.value?.data,
                 tag_image: data?.tag_image,
               };
             } else {
-              setErrMessage(data?.value?.message?.error);
+              setErrMessage(data?.value?.error);
               return null;
             }
           })
@@ -62,7 +69,6 @@ const useFeaturedCollections = () => {
   useEffect(() => {
     fetchCurrencyValue();
   }, [currency_state_from_redux]);
-
   return {
     allTagsData,
     fetchDisplayTagsDataFunction,
